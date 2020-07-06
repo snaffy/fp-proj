@@ -1,0 +1,13 @@
+<div class="container">
+  <table class="table">
+    <tbody>
+    <ng-container *ngFor="let product of products$ | async">
+      <tr [ngClass]="(product.price <= 0)?'table-danger':''">
+        <td>{{product.name}}</td>
+        <td>{{product.price | currency: 'EUR'}}</td>
+        <td><button [routerLink]="['/products', product.id]" class="btn btn-secondary">View Details</button></td>
+      </tr>
+    </ng-container>
+
+  </table>
+</div>
