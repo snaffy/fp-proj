@@ -1,9 +1,11 @@
 <div class="container">
   <button [routerLink]="['/products']" class="btn btn-secondary">Back to list</button>
   <div class="shadow p-3 mb-5 bg-white rounded">
-    <p>Product Name: {{product.name}}</p>
-    <p>Product Description: {{product.description}}</p>
-    <p>Product Price: {{product.price | currency: 'EUR'}}</p>
+    <ng-container *ngIf="product$ | async as product">
+      <p>Product Name: {{product.name}}</p>
+      <p>Product Description: {{product.description}}</p>
+      <p>Product Price: {{product.price | currency: 'EUR'}}</p>
+    </ng-container>
   </div>
 
 </div>

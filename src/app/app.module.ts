@@ -7,6 +7,8 @@ import {HomeComponent} from './home/home.component';
 import {ContactComponent} from './contact/contact.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {NavigationComponent} from './navigation/navigation.component';
+import {HttpClientModule} from '@angular/common/http';
+import {CoreModule} from './core/core.module';
 
 
 @NgModule({
@@ -19,7 +21,8 @@ import {NavigationComponent} from './navigation/navigation.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

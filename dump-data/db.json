@@ -1,0 +1,97 @@
+{
+  "acl": [
+    {
+      "id": 1,
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "role": "guest"
+    }
+  ],
+  "users": {
+    "__": "to be deleted and replaced with auth0 or some such",
+    "bob": {
+      "id": 1
+    },
+    "alice": {
+      "id": 2
+    }
+  },
+  "contact": [
+  ],
+  "products": [
+    {
+      "name": "Product #12",
+      "description": "Product #1 description",
+      "price": 1.23,
+      "id": 1
+    },
+    {
+      "id": 2,
+      "name": "Product #2",
+      "description": "Product #2 description",
+      "price": 0
+    },
+    {
+      "id": 3,
+      "name": "Product #3",
+      "description": "Product #3 description",
+      "price": 3.23
+    },
+    {
+      "id": 4,
+      "name": "Product #4",
+      "description": "Product #4 description",
+      "price": 4.23
+    },
+    {
+      "id": 5,
+      "name": "Product #5",
+      "description": "Product #5 description",
+      "price": 0
+    },
+    {
+      "id": 6,
+      "name": "Product #6",
+      "description": "Product #6 description",
+      "price": 6.23
+    },
+    {
+      "id": 7,
+      "name": "Product #7",
+      "description": "Product #7 description",
+      "price": 7.23
+    },
+    {
+      "id": 8,
+      "name": "Product #8",
+      "description": "Product #8 description",
+      "price": 0
+    },
+    {
+      "id": 9,
+      "name": "Product #9",
+      "description": "Product #9 description",
+      "price": 99.23
+    },
+    {
+      "id": 10,
+      "name": "Product #10",
+      "description": "Product #10 description",
+      "price": 61.23
+    },
+    {
+      "id": 11,
+      "name": "Product #11",
+      "description": "Product #11 description",
+      "price": 0.01
+    },
+    {
+      "id": 12,
+      "name": "Product #12",
+      "description": "Product #6 description",
+      "price": 26.23
+    }
+  ]
+}

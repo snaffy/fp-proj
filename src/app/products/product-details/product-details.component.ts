@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ProductService} from '../../core/services/product.service';
 import {Product} from '../../model/product';
 import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -10,7 +11,7 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class ProductDetailsComponent implements OnInit {
 
-  product: Product;
+  product$: Observable<Product>;
 
   constructor(private eventDetailsService: ProductService, private route: ActivatedRoute) {
   }
@@ -21,12 +22,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   private initProductDetails(productId): void {
-    this.eventDetailsService.getProductById(productId).subscribe(product => {
-        this.product = product;
-      },
-      error => {
-        console.log(error);
-      });
+    this.product$ = this.eventDetailsService.getProductById(productId);
   }
 
 

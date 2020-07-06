@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Product} from '../../model/product';
 import {ProductService} from '../../core/services/product.service';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -13,11 +13,8 @@ export class ProductListComponent implements OnInit {
   products$: Observable<Array<Product>>;
 
   constructor(private productService: ProductService) {
-    this.initProductList();
-  }
-
-  private initProductList(): void {
-    this.products$ = this.productService.getAllProducts();
+    this.products$ = productService.getAllProducts();
+    this.productService.fetchProducts();
   }
 
   ngOnInit(): void {
