@@ -36,6 +36,7 @@ export class FormErrorHandlerComponent implements OnInit, OnChanges, AfterViewIn
     this.createDivsWithInvalidMessages();
   }
 
+  //TODO fix issues with duplicated messagess
   ngOnChanges(changes: SimpleChanges): void {
     const controls = this.form.controls;
     for (const field in controls) {
@@ -56,7 +57,6 @@ export class FormErrorHandlerComponent implements OnInit, OnChanges, AfterViewIn
     const invalidField = this.parentRef.nativeElement.querySelector(`#` + field);
     this.renderer2.removeClass(invalidField, 'is-invalid');
   }
-
 
   private createDivsWithInvalidMessages(): void {
     this.errorMessage.forEach(value => {
