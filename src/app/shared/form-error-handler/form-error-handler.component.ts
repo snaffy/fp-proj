@@ -22,7 +22,7 @@ export class FormErrorHandlerComponent implements OnInit, OnChanges, AfterViewIn
   @Input()
   wasSubmitted = false;
   @Input()
-  errorMessage: Array<ErrorMessageMapping>[];
+  errorMessage: Array<ErrorMessageMapping>;
   @Input()
   parentRef: ElementRef;
 
