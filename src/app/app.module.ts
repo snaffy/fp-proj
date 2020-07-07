@@ -9,6 +9,8 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {NavigationComponent} from './navigation/navigation.component';
 import {HttpClientModule} from '@angular/common/http';
 import {CoreModule} from './core/core.module';
+import {ReactiveFormsModule} from '@angular/forms';
+import {SharedModule} from './shared/shared.module';
 
 
 @NgModule({
@@ -23,6 +25,8 @@ import {CoreModule} from './core/core.module';
     BrowserModule,
     AppRoutingModule,
     CoreModule,
+    ReactiveFormsModule,
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
