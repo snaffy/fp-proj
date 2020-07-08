@@ -18,21 +18,30 @@ export class ProductService {
   constructor(private httpClient: HttpClient) {
   }
 
-  fetchProducts(): void {
+  fetchFirstTenProducts(): void {
     this.paginateProducts(1, 10);
   }
 
   filterProductsBy(filterQuery: string): void {
     if (!filterQuery) {
-      this.fetchProducts();
+      this.fetchFirstTenProducts();
       return;
     }
     this.sendFilterRequest(filterQuery);
   }
 
-  paginateProducts(page: number, limit: number, filterQuery?: string): void {
+  paginateProducts(page: number, limit?: number, filterQuery?: string): void {
     const request = this.createRequest(page, limit, filterQuery);
     this.sentPaginationRequest(request);
+  }
+
+  sliceProducts(start: number, end: number): void {
+    this.httpClient.get<Array<Product>>(`${ApiUrl.BASE_URL}/products?_start=${start}&_end=${end}`, {observe: 'response'}).subscribe(
+      data => {
+        this._products$.next(new Products(data.body, +data.headers.get('X-Total-Count')));
+      },
+      error => console.error('Could not fetch data from api.', error)
+    );
   }
 
   getProducts(): Observable<Products> {

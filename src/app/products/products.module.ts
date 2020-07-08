@@ -11,6 +11,7 @@ import {ProductFilterComponent} from './product-filter/product-filter.component'
 import {FormsModule} from '@angular/forms';
 import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
+import {SharedModule} from '../shared/shared.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     ProductsRoutingModule,
     PaginationModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
   providers: [ProductService],
 })

@@ -1,1 +1,20 @@
-<p>home works!</p>
+<div class="container">
+  <ng-container *ngIf="productDataLoaded === true; then showProducts; else waitForData"></ng-container>
+  <ng-template #waitForData>
+    <app-load-data-spinner></app-load-data-spinner>
+  </ng-template>
+  <ng-template #showProducts>
+    <div class="row row-cols-2">
+      <ng-container *ngFor="let product of products.products">
+        <div class="col-md-6">
+          <div class="shadow p-3 mb-5 bg-white rounded">
+            <p>Product Name: {{product.name}}</p>
+            <p>Product Description: {{product.description}}</p>
+            <p>Product Price: {{product.price | currency: 'EUR'}}</p>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
+
+</div>
