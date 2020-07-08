@@ -1,13 +1,29 @@
 <div class="container">
-  <table class="table">
-    <tbody>
-    <ng-container *ngFor="let product of products$ | async">
-      <tr [ngClass]="(product.price <= 0)?'table-danger':''">
-        <td>{{product.name}}</td>
-        <td>{{product.price | currency: 'EUR'}}</td>
-        <td><button [routerLink]="['/products', product.id]" class="btn btn-secondary">View Details</button></td>
-      </tr>
-    </ng-container>
+  <app-product-filter #productFilterComponent></app-product-filter>
+  <ng-container *ngIf="productDataLoaded === true; then renderTable; else waitForData"></ng-container>
 
-  </table>
+  <ng-template #waitForData>
+   <app-load-data-spinner></app-load-data-spinner>
+  </ng-template>
+
+  <ng-template #renderTable>
+
+    <table class="table">
+      <tbody>
+      <ng-container *ngFor="let product of products | slice: 1: paginationConfig.pageSize">
+        <tr [ngClass]="(product.price <= 0)?'table-danger':''">
+          <td>{{product.name}}</td>
+          <td>{{product.price | currency: 'EUR'}}</td>
+          <td>
+            <button [routerLink]="['/products', product.id]" class="btn btn-secondary">View Details</button>
+          </td>
+        </tr>
+      </ng-container>
+    </table>
+      <pagination [totalItems]="paginationConfig.totalItems" [boundaryLinks]="true"
+                  (pageChanged)="pageChanged($event)"></pagination>
+  </ng-template>
+
+
 </div>
+

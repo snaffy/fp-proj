@@ -7,15 +7,23 @@ import {ProductDetailsComponent} from './product-details/product-details.compone
 import {ProductListComponent} from './product-list/product-list.component';
 import {NavigationComponent} from '../navigation/navigation.component';
 import {ProductService} from '../core/services/product.service';
+import {ProductFilterComponent} from './product-filter/product-filter.component';
+import {FormsModule} from '@angular/forms';
+import {PaginationModule} from 'ngx-bootstrap/pagination';
+import {NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
+import {SharedModule} from '../shared/shared.module';
 
 
 @NgModule({
-  declarations: [ProductDetailsComponent, ProductListComponent],
+  declarations: [ProductDetailsComponent, ProductListComponent, ProductFilterComponent],
   imports: [
     CommonModule,
-    ProductsRoutingModule
+    ProductsRoutingModule,
+    PaginationModule,
+    FormsModule,
+    SharedModule
   ],
-  providers: [ProductService]
+  providers: [ProductService],
 })
 export class ProductsModule {
 }

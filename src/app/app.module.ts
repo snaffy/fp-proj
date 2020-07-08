@@ -11,6 +11,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {CoreModule} from './core/core.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from './shared/shared.module';
+import {PaginationModule} from 'ngx-bootstrap/pagination';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import {SharedModule} from './shared/shared.module';
     AppRoutingModule,
     CoreModule,
     ReactiveFormsModule,
+    PaginationModule.forRoot(),
     SharedModule,
   ],
   providers: [],
