@@ -1,59 +1,57 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Product} from '../../model/product';
 import {ProductService} from '../../core/services/product.service';
-import {BehaviorSubject, Observable} from 'rxjs';
 import {ProductFilterComponent} from '../product-filter/product-filter.component';
 import {PaginationConfig} from './model/pagination-config';
-import {Products} from '../../model/products';
 import {PageChangedEvent} from 'ngx-bootstrap/pagination';
+import {Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
 })
-export class ProductListComponent implements OnInit, AfterViewInit {
-  products: Array<Product>;
-  products$: Observable<Array<Product>>;
+export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
+
   @ViewChild(ProductFilterComponent)
   productFilterComponent: ProductFilterComponent;
+  products: Array<Product>;
   paginationConfig: PaginationConfig;
-  productDataLoaded = false;
+  productDataLoaded;
+  private productsSubscription: Subscription;
+  private subject: Subject<string>;
+  private filterQuery: string;
 
   constructor(private productService: ProductService) {
-    this.paginationConfig = new PaginationConfig(1, 10, 100);
+    this.paginationConfig = new PaginationConfig();
+    this.subject = new Subject<string>();
   }
 
   ngOnInit(): void {
+    this.productDataLoaded = false;
     this.productService.fetchProducts();
     this.initializeProductsViewList();
-    this.initializePaginationConfig();
+  }
+
+  ngOnDestroy(): void {
+    this.productsSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
-    this.productFilterComponent.searchForm$.subscribe(value => {
+    this.productFilterComponent.searchForm$.asObservable().subscribe(value => {
+      this.filterQuery = value;
       this.productService.filterProductsBy(value);
     });
   }
 
-  private initializePaginationConfig(): void {
-    console.log( this.productService.getProducts().asObservable().subscribe(value => console.log(value)));
-
-    //   .subscribe(value => {
-    //   this.paginationConfig = new PaginationConfig(1, 10, value.length);
-    // });
-  }
-
   pageChanged($event: PageChangedEvent): void {
-    this.productService.paginateProducts($event.page, $event.itemsPerPage);
-    this.products$.subscribe(value => {
-      console.log(value);
-    });
+    this.productService.paginateProducts($event.page, $event.itemsPerPage, this.filterQuery);
   }
 
   private initializeProductsViewList(): void {
-    this.productService.getProducts().subscribe(value => {
-      this.products = value;
+    this.productsSubscription = this.productService.getProducts().subscribe(value => {
+      this.products = value.products;
+      this.paginationConfig.totalItems = value.productCount;
       this.productDataLoaded = true;
     });
   }

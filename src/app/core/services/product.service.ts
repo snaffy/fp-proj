@@ -1,54 +1,71 @@
 import {Inject, Injectable} from '@angular/core';
 import {Product} from '../../model/product';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {APP_BASE_HREF, LocationStrategy} from '@angular/common';
 import {Router} from '@angular/router';
 import {count} from 'rxjs/operators';
+import {Products} from '../../model/products';
+import {ApiUrl} from '../../model/api-url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private _products$ = new BehaviorSubject<Array<Product>>([]);
-  private _baseUrl = '/api';
-  countNumber: number;
+  private _products$ = new Subject<Products>();
+
   constructor(private httpClient: HttpClient) {
   }
 
-  paginateProducts(page: number, limit: number): void {
-    this.httpClient.get<Array<Product>>(`${this._baseUrl}/products?_page=${page}&?_limit=${limit}`).subscribe(
-      data => {
-        this._products$.next(data);
-      },
-      error => console.error('Could not fetch data from api.', error)
-    );
-  }
-
   fetchProducts(): void {
-    this.httpClient.get<Array<Product>>(`${this._baseUrl}/products`).subscribe(
-      data => {
-        this._products$.next(data);
-      },
-      error => console.error('Could not fetch data from api.', error)
-    );
+    this.paginateProducts(1, 10);
   }
 
   filterProductsBy(filterQuery: string): void {
-    this.httpClient.get<Array<Product>>(`${this._baseUrl}/products?q=${filterQuery}`).subscribe(
+    if (!filterQuery) {
+      this.fetchProducts();
+      return;
+    }
+    this.sendFilterRequest(filterQuery);
+  }
+
+  paginateProducts(page: number, limit: number, filterQuery?: string): void {
+    const request = this.createRequest(page, limit, filterQuery);
+    this.sentPaginationRequest(request);
+  }
+
+  getProducts(): Observable<Products> {
+    return this._products$.asObservable();
+  }
+
+  getProductById(id: string): Observable<Product> {
+    return this.httpClient.get <Product>(`${ApiUrl.BASE_URL}/products/${id}`);
+  }
+
+  private sentPaginationRequest(request: string): void {
+    this.httpClient.get<Array<Product>>(`${ApiUrl.BASE_URL}/products?${request}`, {observe: 'response'}).subscribe(
       data => {
-        this._products$.next(data);
+        this._products$.next(new Products(data.body, +data.headers.get('X-Total-Count')));
       },
       error => console.error('Could not fetch data from api.', error)
     );
   }
 
-  getProducts(): BehaviorSubject<Array<Product>> {
-    return this._products$;
+  private sendFilterRequest(filterQuery: string): void {
+    this.httpClient.get<Array<Product>>(`${ApiUrl.BASE_URL}/products?q=${filterQuery}`).subscribe(
+      data => {
+        this._products$.next(new Products(data));
+      },
+      error => console.error('Could not fetch data from api.', error)
+    );
   }
 
-  getProductById(id: string): Observable<Product> {
-    return this.httpClient.get <Product>(`${this._baseUrl}/products/${id}`);
+  private createRequest(page: number, limit: number, filterQuery: string): string {
+    let request = `_page=${page}&_limit=${limit}`;
+    if (filterQuery) {
+      request = `q=${filterQuery}&` + request;
+    }
+    return request;
   }
 }

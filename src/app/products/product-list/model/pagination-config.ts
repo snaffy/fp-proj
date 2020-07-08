@@ -1,17 +1,15 @@
 export class PaginationConfig {
-  private _page;
-  private _pageSize;
-  private _totalItems;
+  private _page = 1;
+  private _pageSize = 1;
+  private _totalItems = 10;
 
-
-  constructor(page, pageSize, totalItems) {
+  constructor(totalItems?: number, page?: number, pageSize?: number) {
     this._page = page;
     this._pageSize = pageSize;
     this._totalItems = totalItems;
   }
 
-
-  set totalItems(value) {
+  set totalItems(value: number) {
     this._totalItems = value;
   }
 
