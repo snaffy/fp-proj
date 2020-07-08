@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   productDataLoaded;
   products: Products;
   private productsSubscription: Subscription;
+  private intervalProductsSubscription: Subscription;
 
   constructor(private productService: ProductService, private productRangeGeneratorService: ProductRangeGeneratorService) {
   }
@@ -28,6 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.productsSubscription.unsubscribe();
+    this.intervalProductsSubscription.unsubscribe();
   }
 
   private subscribeToProducts(): void {
@@ -38,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private reloadProductsEvery(period: number): void {
-    interval(period).subscribe(x => {
+    this.intervalProductsSubscription = interval(period).subscribe(x => {
       this.randomizeNextProducts();
     });
   }
