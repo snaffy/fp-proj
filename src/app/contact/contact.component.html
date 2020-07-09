@@ -11,24 +11,22 @@
         <label>E-mail:</label>
         <input id="emailId" name="email" formControlName="email" type="text" class="form-control"
                placeholder="Enter e-mail">
-        <app-form-error-handler [form]="form"
-                                [errorMessage]="[
-                                {fieldId: 'emailId', validatorType:'email',invalidMessage:'Email address field is invalid.'},
-                                {fieldId: 'emailId', validatorType:'required',invalidMessage:'The above field is required.'},
-                                {fieldId: 'messageId', validatorType:'required',invalidMessage:'The above field is required.'},
-                                {fieldId: 'messageId', validatorType:'tmp',invalidMessage:'Maximum allowed 200 characters.'}]"
-                                [parentRef]="ref"
-                                [wasSubmitted]="submitted">
-        </app-form-error-handler>
       </div>
       <div class="form-group">
         <label>Message</label>
         <textarea id="messageId" formControlName="message" class="form-control" rows="3"></textarea>
-
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </ng-template>
-
+  <app-form-error-handler [form]="form"
+                          [errMapping]="[
+                                {fieldId: 'emailId', validatorType:'email',invalidMessage:'Email address field is invalid.'},
+                                {fieldId: 'emailId', validatorType:'required',invalidMessage:'The above field is required.'},
+                                {fieldId: 'messageId', validatorType:'required',invalidMessage:'The above field is required.'},
+                                {fieldId: 'messageId', validatorType:'maxlength',invalidMessage:'Maximum allowed 200 characters.'}]"
+                          [parentRef]="ref"
+                          [wasSubmitted]="submitted">
+  </app-form-error-handler>
 
 </div>

@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   Input,
@@ -8,21 +7,21 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {AbstractControl, FormGroup} from '@angular/forms';
 import {ErrorMessageMapping} from './model/error-message-mapping';
 
 @Component({
   selector: 'app-form-error-handler',
   templateUrl: './form-error-handler.component.html'
 })
-export class FormErrorHandlerComponent implements OnInit, OnChanges, AfterViewInit {
+export class FormErrorHandlerComponent implements OnInit, OnChanges {
 
   @Input()
   form: FormGroup;
   @Input()
   wasSubmitted = false;
   @Input()
-  errorMessage: Array<ErrorMessageMapping>;
+  errMapping: Array<ErrorMessageMapping>;
   @Input()
   parentRef: ElementRef;
 
@@ -32,49 +31,79 @@ export class FormErrorHandlerComponent implements OnInit, OnChanges, AfterViewIn
   ngOnInit(): void {
   }
 
-  ngAfterViewInit(): void {
-    this.createDivsWithInvalidMessages();
-  }
-
-  //TODO fix issues with duplicated messagess
   ngOnChanges(changes: SimpleChanges): void {
     const controls = this.form.controls;
+    this.removePreviouslyCreatedErrDivs();
     for (const field in controls) {
-      if ((controls[field].dirty && controls[field].errors) || (this.wasSubmitted && controls[field].errors)) {
-        this.markFieldAsInvalid(field + 'Id');
+      const controlField = controls[field];
+      if (this.fieldHasError(controlField)) {
+        Object.keys(controlField.errors).forEach(validatorType => {
+          this.createErrDivsAndMarkAsInvalid(field, validatorType);
+        });
       } else {
         this.markFieldAsValid(field + 'Id');
       }
     }
   }
 
-  private markFieldAsInvalid(field): void {
-    const invalidField = this.parentRef.nativeElement.querySelector(`#` + field);
+  private fieldHasError(controlField: AbstractControl): boolean {
+    if ((controlField.dirty && controlField.errors) || (this.wasSubmitted && controlField.errors)) {
+      return true;
+    }
+    return false;
+  }
+
+  private markFieldAsInvalid(fieldId): void {
+    const invalidField = this.parentRef.nativeElement.querySelector(`#` + fieldId);
     this.renderer2.addClass(invalidField, 'is-invalid');
   }
 
-  private markFieldAsValid(field): void {
-    const invalidField = this.parentRef.nativeElement.querySelector(`#` + field);
+  private markFieldAsValid(fieldId): void {
+    const invalidField = this.parentRef.nativeElement.querySelector(`#` + fieldId);
     this.renderer2.removeClass(invalidField, 'is-invalid');
   }
 
-  private createDivsWithInvalidMessages(): void {
-    this.errorMessage.forEach(value => {
-      this.createDiv(value);
+  private createDiv(fieldId: string, errMapping: ErrorMessageMapping): void {
+    const errDivId = this.createErrDivIdFrom(errMapping);
+    if (this.parentRef.nativeElement.querySelector(`#` + errDivId) !== null) {
+      return;
+    }
+    const element = this.parentRef.nativeElement.querySelector(`#` + fieldId);
+    const div = this.renderer2.createElement('div');
+    const text = this.renderer2.createText(errMapping.invalidMessage);
+    div.classList.add('invalid-feedback');
+    div.id = errDivId;
+    this.renderer2.appendChild(div, text);
+    element.after(div);
+  }
+
+  private createErrDivIdFrom(errMapping: ErrorMessageMapping): string {
+    return errMapping.fieldId + '-' + errMapping.validatorType;
+  }
+
+  private createErrDivsAndMarkAsInvalid(field: string, validatorType: string): void {
+    const fieldId = field + 'Id';
+    const errorMessage = this.getErrorMessage(fieldId, validatorType);
+    this.createDiv(fieldId, errorMessage);
+    this.markFieldAsInvalid(field + 'Id');
+  }
+
+  private getErrorMessage(fieldId: string, validatorType: string): ErrorMessageMapping {
+    return this.errMapping.find(value => (value.fieldId === fieldId) && (value.validatorType === validatorType));
+  }
+
+  private removePreviouslyCreatedErrDivs(): void {
+    this.errMapping.forEach(value => {
+      this.removeErrDiv(this.createErrDivIdFrom(value));
     });
   }
 
-  private createDiv(errors: ErrorMessageMapping): void {
-    const invalidField = this.parentRef.nativeElement.querySelector(`#` + errors.fieldId);
-    this.createInvalidMessage(invalidField, errors.invalidMessage);
-  }
-
-  createInvalidMessage(element, message): void {
-    const div = this.renderer2.createElement('div');
-    const text = this.renderer2.createText(message);
-    div.classList.add('invalid-feedback');
-    this.renderer2.appendChild(div, text);
-    element.after(div);
+  private removeErrDiv(divId: string): void {
+    const element = this.parentRef.nativeElement.querySelector(`#` + divId);
+    if (element === null) {
+      return;
+    }
+    element.remove();
   }
 
 
