@@ -38,6 +38,11 @@
       "email": "art.zgmt@gmail.com",
       "message": "asd",
       "id": 4
+    },
+    {
+      "email": "art.zgmt@gmail.com",
+      "message": "test2",
+      "id": 5
     }
   ],
   "products": [
@@ -621,7 +626,7 @@
       "id": "a23196da-4398-43d3-a8ff-74363fe0c243",
       "name": "Tomatoes - Cherry",
       "description": "Unsp physeal fracture of upper end of left tibia, sequela",
-      "price": 8.0
+      "price": 8
     },
     {
       "id": "bf192fdb-502c-408a-a7ac-81e4c3eb2987",

@@ -4,8 +4,7 @@ import {debounceTime, delay, filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-filter',
-  templateUrl: './product-filter.component.html',
-  styleUrls: ['./product-filter.component.scss']
+  templateUrl: './product-filter.component.html'
 })
 export class ProductFilterComponent implements OnInit {
   @ViewChild('searchInput', {static: true}) searchInput: ElementRef;

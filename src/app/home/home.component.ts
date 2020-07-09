@@ -8,7 +8,6 @@ import {ProductRangeGeneratorService} from './product-range-generator.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
   providers: [ProductRangeGeneratorService]
 })
 export class HomeComponent implements OnInit, OnDestroy {
