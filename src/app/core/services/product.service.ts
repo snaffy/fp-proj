@@ -13,7 +13,7 @@ import {ApiUrl} from '../../model/api-url';
 })
 export class ProductService {
 
-  private _products$ = new Subject<Products>();
+  private _products$ = new BehaviorSubject<Products>(new Products([], 0));
 
   constructor(private httpClient: HttpClient) {
   }
