@@ -1,5 +1,5 @@
 <div class="container">
-  <button [routerLink]="['/products']" class="btn btn-secondary">Back to list</button>
+  <button [routerLink]="['/products']" queryParamsHandling="merge" class="btn btn-secondary">Back to list</button>
   <div class="shadow p-3 mb-5 bg-white rounded">
     <ng-container *ngIf="product$ | async as product">
       <p>Product Name: {{product.name}}</p>

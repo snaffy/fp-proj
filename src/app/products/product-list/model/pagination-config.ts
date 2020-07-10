@@ -1,6 +1,6 @@
 export class PaginationConfig {
   private _page = 1;
-  private _pageSize = 1;
+  private _pageSize = 10;
   private _totalItems = 10;
 
   constructor(totalItems?: number, page?: number, pageSize?: number) {
@@ -24,4 +24,5 @@ export class PaginationConfig {
   get totalItems() {
     return this._totalItems;
   }
+
 }

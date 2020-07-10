@@ -1,5 +1,5 @@
 <div class="container">
-  <app-product-filter #productFilterComponent></app-product-filter>
+  <app-product-filter></app-product-filter>
   <ng-container *ngIf="productDataLoaded === true; then renderTable; else waitForData"></ng-container>
 
   <ng-template #waitForData>
@@ -15,12 +15,12 @@
           <td>{{product.name}}</td>
           <td>{{product.price | currency: 'EUR'}}</td>
           <td>
-            <button [routerLink]="['/products', product.id]" class="btn btn-secondary">View Details</button>
+            <button [routerLink]="['/products', product.id]" queryParamsHandling="merge" class="btn btn-secondary">View Details</button>
           </td>
         </tr>
       </ng-container>
     </table>
-      <pagination [totalItems]="paginationConfig.totalItems" [boundaryLinks]="true"
+      <pagination [(ngModel)]="currentSelectedPage" [totalItems]="paginationConfig.totalItems" [boundaryLinks]="true"
                   (pageChanged)="pageChanged($event)"></pagination>
   </ng-template>
 

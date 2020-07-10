@@ -5,6 +5,8 @@ import {ProductFilterComponent} from '../product-filter/product-filter.component
 import {PaginationConfig} from './model/pagination-config';
 import {PageChangedEvent} from 'ngx-bootstrap/pagination';
 import {Subject, Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-list',
@@ -19,9 +21,9 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   productDataLoaded;
   private productsSubscription: Subscription;
   private subject: Subject<string>;
-  private filterQuery: string;
-
-  constructor(private productService: ProductService) {
+  currentSelectedPage;
+  searchBy: string;
+  constructor(private productService: ProductService, private router: Router, private activatedRoute: ActivatedRoute) {
     this.paginationConfig = new PaginationConfig();
     this.subject = new Subject<string>();
   }
@@ -30,6 +32,8 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productDataLoaded = false;
     this.productService.fetchFirstTenProducts();
     this.initializeProductsViewList();
+    this.currentSelectedPage = this.paginationConfig.page;
+    this.subscribeToParamFilterChanges();
   }
 
   ngOnDestroy(): void {
@@ -38,13 +42,18 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.productFilterComponent.searchForm$.asObservable().subscribe(value => {
-      this.filterQuery = value;
       this.productService.filterProductsBy(value);
     });
   }
 
   pageChanged($event: PageChangedEvent): void {
-    this.productService.paginateProducts($event.page, $event.itemsPerPage, this.filterQuery);
+    this.currentSelectedPage = $event.page;
+    console.log(this.currentSelectedPage);
+    this.router.navigate([],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: {_page: $event.page, _itemsPerPage: $event.itemsPerPage}, queryParamsHandling: 'merge'
+      });
   }
 
   private initializeProductsViewList(): void {
@@ -53,6 +62,27 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.paginationConfig.totalItems = value.productCount;
       this.productDataLoaded = true;
     });
+  }
+
+  private subscribeToParamFilterChanges(): void {
+    this.activatedRoute.queryParams
+      .pipe(filter(value => !this.searchParamsAreEmpty(value)))
+      .subscribe(params => {
+        const page = +params._page || this.paginationConfig.page;
+        const itemsPerPage = +params._itemsPerPage || this.paginationConfig.pageSize;
+        const filterQuery = params._q;
+        this.currentSelectedPage = page;
+        this.productService.paginateProducts(page, itemsPerPage, filterQuery);
+      });
+  }
+
+  private searchParamsAreEmpty(obj): boolean {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 
