@@ -7,11 +7,9 @@ import {HomeComponent} from './home/home.component';
 import {ContactComponent} from './contact/contact.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {NavigationComponent} from './navigation/navigation.component';
-import {HttpClientModule} from '@angular/common/http';
 import {CoreModule} from './core/core.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from './shared/shared.module';
-import {PaginationModule} from 'ngx-bootstrap/pagination';
 
 
 @NgModule({
@@ -27,7 +25,6 @@ import {PaginationModule} from 'ngx-bootstrap/pagination';
     AppRoutingModule,
     CoreModule,
     ReactiveFormsModule,
-    PaginationModule.forRoot(),
     SharedModule,
   ],
   providers: [],
