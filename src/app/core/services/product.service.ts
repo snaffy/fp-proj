@@ -1,12 +1,10 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Product} from '../../model/product';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {APP_BASE_HREF, LocationStrategy} from '@angular/common';
-import {Router} from '@angular/router';
-import {count} from 'rxjs/operators';
 import {Products} from '../../model/products';
 import {ApiUrl} from '../../model/api-url';
+import {PaginationRequestFactory} from '../common/pagination-request-factory';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +29,7 @@ export class ProductService {
   }
 
   paginateProducts(page: number, limit?: number, filterQuery?: string): void {
-    const request = this.createRequest(page, limit, filterQuery);
+    const request = PaginationRequestFactory.createRequest(page, limit, filterQuery);
     this.sentPaginationRequest(request);
   }
 
@@ -44,12 +42,20 @@ export class ProductService {
     );
   }
 
+  edit(product: Product): Observable<Product> {
+    return this.httpClient.put<Product>(`${ApiUrl.BASE_URL}/products/${product.id}`, product);
+  }
+
   getProducts(): Observable<Products> {
     return this._products$.asObservable();
   }
 
   getProductById(id: string): Observable<Product> {
     return this.httpClient.get <Product>(`${ApiUrl.BASE_URL}/products/${id}`);
+  }
+
+  add(product: Product): Observable<Product> {
+    return this.httpClient.post<Product>(`${ApiUrl.BASE_URL}/products`, product);
   }
 
   private sentPaginationRequest(request: string): void {
@@ -68,13 +74,5 @@ export class ProductService {
       },
       error => console.error('Could not fetch data from api.', error)
     );
-  }
-
-  private createRequest(page: number, limit: number, filterQuery: string): string {
-    let request = `_page=${page}&_limit=${limit}`;
-    if (filterQuery) {
-      request = `q=${filterQuery}&` + request;
-    }
-    return request;
   }
 }

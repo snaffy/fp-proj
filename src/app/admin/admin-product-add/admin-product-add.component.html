@@ -1,0 +1,5 @@
+<app-admin-product-form [shouldFormBeResetAfterSaveEmit]="true"
+                        [product$]="product$"
+                        (saveEmitter)="save($event)"></app-admin-product-form>
+<app-product-form-modyfication-modal [modalResult$]="operationResultAsModal$"></app-product-form-modyfication-modal>
+

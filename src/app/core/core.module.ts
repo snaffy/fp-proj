@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule} from '@angular/router';
 import {PaginationModule} from 'ngx-bootstrap/pagination';
+import {OAuthModule} from 'angular-oauth2-oidc';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import {PaginationModule} from 'ngx-bootstrap/pagination';
     HttpClientModule,
     RouterModule,
     PaginationModule.forRoot(),
+    OAuthModule.forRoot()
   ]
 })
 export class CoreModule {}

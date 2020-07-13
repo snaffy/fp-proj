@@ -1,0 +1,19 @@
+<div class="container">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">E-mail</th>
+      <th scope="col">Message</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let message of messages | slice: 1: paginationConfig.pageSize">
+      <tr>
+        <td>{{message.email}}</td>
+        <td>{{message.message}}</td>
+      </tr>
+    </ng-container>
+  </table>
+  <pagination [totalItems]="paginationConfig.totalItems" [boundaryLinks]="true"
+              (pageChanged)="pageChanged($event)"></pagination>
+</div>

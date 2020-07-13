@@ -1,0 +1,40 @@
+<div class="container">
+
+  <form [formGroup]="productForm" (ngSubmit)="save()">
+    <div class="form-group">
+      <label>Product name</label>
+      <input type="text" id="nameId"
+             name="name"
+             formControlName="name"
+             class="form-control">
+      <label>Product price</label>
+      <input currencyMask formControlName="price" id="priceId"
+             name="price"
+             class="form-control"
+             [options]="{ prefix: '€', thousands: '.', decimal: ',', align: 'left' }">
+      <label>Product description</label>
+      <textarea rows="3"
+                name="description"
+                formControlName="description"
+                class="form-control" id="descriptionId"></textarea>
+      <div class="form-group">
+      </div>
+      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-md-1" role="group" aria-label="First group">
+          <button type="button" (click)="toPreviouslyPage()"  class="btn btn-primary">Cancel</button>
+        </div>
+        <div class="btn-group mr-md-1" role="group" aria-label="First group">
+          <button type="submit"  class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+      <app-form-error-handler [form]="form"
+                              [errMapping]="[
+                                {fieldId: 'nameId', validatorType:'required',invalidMessage:'The above field is required.'},
+                                {fieldId: 'priceId', validatorType:'required',invalidMessage:'The above field is required.'},
+                                {fieldId: 'descriptionId', validatorType:'required',invalidMessage:'The above field is required.'}
+                             ]"
+                              [parentRef]="elementRef"
+                              [wasSubmitted]="wasSubmitted"></app-form-error-handler>
+    </div>
+  </form>
+</div>

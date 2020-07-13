@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Product} from '../../model/product';
 import {ProductService} from '../../core/services/product.service';
 import {ProductFilterComponent} from '../product-filter/product-filter.component';
@@ -7,6 +7,7 @@ import {PageChangedEvent} from 'ngx-bootstrap/pagination';
 import {Subject, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
+import {AuthService} from '../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-product-list',
@@ -19,12 +20,17 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   products: Array<Product>;
   paginationConfig: PaginationConfig;
   productDataLoaded;
+  currentSelectedPage;
   private productsSubscription: Subscription;
   private subject: Subject<string>;
-  currentSelectedPage;
-  searchBy: string;
-  constructor(private productService: ProductService, private router: Router, private activatedRoute: ActivatedRoute) {
+
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    public authService: AuthService) {
     this.paginationConfig = new PaginationConfig();
+    this.currentSelectedPage = this.paginationConfig.page;
     this.subject = new Subject<string>();
   }
 
@@ -32,7 +38,6 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productDataLoaded = false;
     this.productService.fetchFirstTenProducts();
     this.initializeProductsViewList();
-    this.currentSelectedPage = this.paginationConfig.page;
     this.subscribeToParamFilterChanges();
   }
 
@@ -48,7 +53,6 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   pageChanged($event: PageChangedEvent): void {
     this.currentSelectedPage = $event.page;
-    console.log(this.currentSelectedPage);
     this.router.navigate([],
       {
         relativeTo: this.activatedRoute,

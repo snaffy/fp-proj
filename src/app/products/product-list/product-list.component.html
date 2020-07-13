@@ -3,25 +3,36 @@
   <ng-container *ngIf="productDataLoaded === true; then renderTable; else waitForData"></ng-container>
 
   <ng-template #waitForData>
-   <app-load-data-spinner></app-load-data-spinner>
+    <app-load-data-spinner></app-load-data-spinner>
   </ng-template>
 
   <ng-template #renderTable>
 
     <table class="table">
+      <tr>
+        <th scope="col">Product name</th>
+        <th scope="col">Price</th>
+      </tr>
       <tbody>
       <ng-container *ngFor="let product of products | slice: 1: paginationConfig.pageSize">
         <tr [ngClass]="(product.price <= 0)?'table-danger':''">
           <td>{{product.name}}</td>
           <td>{{product.price | currency: 'EUR'}}</td>
           <td>
-            <button [routerLink]="['/products', product.id]" queryParamsHandling="merge" class="btn btn-secondary">View Details</button>
+            <button [routerLink]="['/products', product.id]" queryParamsHandling="merge" class="btn btn-primary">View
+              Details
+            </button>
+          </td>
+          <td *ngIf="(authService.isAuthenticated$ | async) === true">
+            <button [routerLink]="['/admin/products/edit', product.id]" queryParamsHandling="merge"
+                    class="btn btn-primary">Edit
+            </button>
           </td>
         </tr>
       </ng-container>
     </table>
-      <pagination [(ngModel)]="currentSelectedPage" [totalItems]="paginationConfig.totalItems" [boundaryLinks]="true"
-                  (pageChanged)="pageChanged($event)"></pagination>
+    <pagination [(ngModel)]="currentSelectedPage" [totalItems]="paginationConfig.totalItems" [boundaryLinks]="true"
+                (pageChanged)="pageChanged($event)"></pagination>
   </ng-template>
 
 

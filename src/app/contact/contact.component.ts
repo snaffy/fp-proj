@@ -12,8 +12,8 @@ export class ContactComponent implements OnInit {
   submitted = false;
   createContactResult = false;
 
-  constructor(private formBuilder: FormBuilder,
-              private elementRef: ElementRef,
+  constructor(public elementRef: ElementRef,
+              private formBuilder: FormBuilder,
               private contactService: ContactService) {
   }
 
@@ -22,11 +22,6 @@ export class ContactComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       message: ['', [Validators.required, Validators.maxLength(200)]],
     });
-  }
-
-  // TODO think about other solution
-  get ref() {
-    return this.elementRef;
   }
 
   get form() {
@@ -46,6 +41,6 @@ export class ContactComponent implements OnInit {
   private createNewContact(): void {
     const controls = this.contactForm.controls;
     const message = {email: controls.email.value, message: controls.message.value};
-    this.contactService.addContact(message);
+    this.contactService.addMessage(message);
   }
 }
