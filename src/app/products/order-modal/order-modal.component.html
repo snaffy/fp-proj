@@ -1,0 +1,32 @@
+<ng-template #orderModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Order Product</h4>
+  </div>
+  <div class="modal-body">
+    <p>Product Name: {{selectedProduct.name}}</p>
+    <p>Price: {{selectedProduct.price}}</p>
+    <p>Number of products available: {{selectedProduct.quantity}} </p>
+    <form [formGroup]="orderProductForm" (ngSubmit)="onSubmit()">
+      <label for="quantityId"></label><input id="quantityId" name="quantity" formControlName="quantity" type="number" class="form-control"
+                                             placeholder="{{selectedProduct.quantity}}">
+      <ng-container *ngIf="orderProductForm.controls.quantity.errors">
+        <div *ngIf="orderProductForm.controls.quantity.errors.max" class="text-danger">
+          Number of products allowed to be purchased was exceeded ({{selectedProduct.quantity}}).
+        </div>
+        <div *ngIf="orderProductForm.controls.quantity.errors.min" class="text-danger">
+          Number of products allowed to be purchased must be greater than 0.
+        </div>
+      </ng-container>
+      <div class="border border-light p-sm-2">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-md-1" role="group" aria-label="First group">
+            <button (click)="closeProductModal('Close click')" type="button" class="btn btn-secondary">Cancel</button>
+          </div>
+          <div class="btn-group" role="group" aria-label="Second group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

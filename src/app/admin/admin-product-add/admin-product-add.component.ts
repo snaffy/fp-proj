@@ -11,7 +11,7 @@ import {ModalResult, ModalResultFactory} from '../product-form--modal/modal-resu
 })
 export class AdminProductAddComponent implements OnInit {
 
-  product$: Observable<Product> = of({name: '', description: '', price: 0.0});
+  product$: Observable<Product> = of({name: '', description: '', price: 0.0, quantity: 0});
 
   constructor(private productService: ProductService) {
     this._operationResultAsModal$ = new Subject<ModalResult>();

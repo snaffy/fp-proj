@@ -12,6 +12,11 @@
              name="price"
              class="form-control"
              [options]="{ prefix: '€', thousands: '.', decimal: ',', align: 'left' }">
+      <label>Quantity</label>
+      <input type="number" id="quantityId"
+             name="quantity"
+             formControlName="quantity"
+             class="form-control">
       <label>Product description</label>
       <textarea rows="3"
                 name="description"
@@ -31,6 +36,7 @@
                               [errMapping]="[
                                 {fieldId: 'nameId', validatorType:'required',invalidMessage:'The above field is required.'},
                                 {fieldId: 'priceId', validatorType:'required',invalidMessage:'The above field is required.'},
+                                {fieldId: 'quantityId', validatorType:'required',invalidMessage:'The above field is required.'},
                                 {fieldId: 'descriptionId', validatorType:'required',invalidMessage:'The above field is required.'}
                              ]"
                               [parentRef]="elementRef"
