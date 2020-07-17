@@ -1,12 +1,14 @@
 <div class="container">
   <button [routerLink]="['/products']" queryParamsHandling="merge" class="btn btn-secondary">Back to list</button>
+  <ng-container *ngIf="product$ | async as product">
+  <button type="button" (click)="openOrderProductModal()" class="btn btn-primary">Purchase</button>
   <div class="shadow p-3 mb-5 bg-white rounded">
-    <ng-container *ngIf="product$ | async as product">
       <p>Product Name: {{product.name}}</p>
       <p>Product Description: {{product.description}}</p>
       <p>Product Price: {{product.price | currency: 'EUR'}}</p>
-    </ng-container>
+      <p>Product Quantity: {{product.quantity}}</p>
   </div>
-
+  </ng-container>
+  <app-order-modal></app-order-modal>
 </div>
 

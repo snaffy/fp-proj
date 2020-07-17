@@ -65,7 +65,8 @@ export class AdminProductFormComponent implements OnInit {
       id: controls.id.value,
       name: controls.name.value,
       price: controls.price.value,
-      description: controls.description.value
+      description: controls.description.value,
+      quantity: controls.quantity.value
     };
   }
 
@@ -75,6 +76,7 @@ export class AdminProductFormComponent implements OnInit {
       name: value.name,
       description: value.description,
       price: value.price,
+      quantity: value.quantity
     });
   }
 
@@ -84,6 +86,7 @@ export class AdminProductFormComponent implements OnInit {
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
       price: ['', [Validators.required]],
+      quantity: [0, [Validators.required]]
     });
   }
 }

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Product} from '../../model/product';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Products} from '../../model/products';
 import {ApiUrl} from '../../model/api-url';
-import {PaginationRequestFactory} from '../common/pagination-request-factory';
+import {RequestFactory} from '../common/request-factory';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,7 @@ export class ProductService {
   }
 
   paginateProducts(page: number, limit?: number, filterQuery?: string): void {
-    const request = PaginationRequestFactory.createRequest(page, limit, filterQuery);
+    const request = RequestFactory.createPaginationRequest(page, limit, filterQuery);
     this.sentPaginationRequest(request);
   }
 
@@ -54,7 +54,15 @@ export class ProductService {
     return this.httpClient.get <Product>(`${ApiUrl.BASE_URL}/products/${id}`);
   }
 
+  getProductByIds(ids: Array<string>): Observable<Array<Product>> {
+    if (ids.length <= 0) {
+      return of();
+    }
+    return this.httpClient.get<Array<Product>>(`${ApiUrl.BASE_URL}/products?${RequestFactory.createByIdsRequest(ids)}`);
+  }
+
   add(product: Product): Observable<Product> {
+
     return this.httpClient.post<Product>(`${ApiUrl.BASE_URL}/products`, product);
   }
 

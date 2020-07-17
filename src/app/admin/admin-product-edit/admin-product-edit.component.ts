@@ -43,6 +43,7 @@ export class AdminProductEditComponent implements OnInit {
   private wasProductChanged(product: Product): boolean {
     return (this._productBeforeChange.name !== product.name) ||
       (this._productBeforeChange.description !== product.description) ||
+      (this._productBeforeChange.quantity !== product.quantity) ||
       (this._productBeforeChange.price !== product.price);
   }
 

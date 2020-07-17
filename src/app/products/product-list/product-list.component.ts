@@ -6,14 +6,17 @@ import {PaginationConfig} from './model/pagination-config';
 import {PageChangedEvent} from 'ngx-bootstrap/pagination';
 import {Subject, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter} from 'rxjs/operators';
+import {filter, mergeMap} from 'rxjs/operators';
 import {AuthService} from '../../core/auth/services/auth.service';
+import {OrderModalComponent} from '../order-modal/order-modal.component';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html'
 })
 export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(OrderModalComponent)
+  orderModalComponent: OrderModalComponent;
 
   @ViewChild(ProductFilterComponent)
   productFilterComponent: ProductFilterComponent;
@@ -60,6 +63,20 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  openOrderProductModal(productId: string): void {
+    this.orderModalComponent.openOrderProductModal(productId);
+  }
+
+  increaseProductQuantityByOne(productId: string): void {
+    this.productService.getProductById(productId).pipe(mergeMap(product => {
+      product.quantity++;
+      return this.productService.edit(product);
+    })).subscribe(updatedProduct => {
+      this.updateProductListView(updatedProduct);
+    });
+
+  }
+
   private initializeProductsViewList(): void {
     this.productsSubscription = this.productService.getProducts().subscribe(value => {
       this.products = value.products;
@@ -87,6 +104,10 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     return true;
+  }
+
+  private updateProductListView(updatedProduct: Product): void {
+    this.products.find(item => item.id === updatedProduct.id).quantity = updatedProduct.quantity;
   }
 }
 

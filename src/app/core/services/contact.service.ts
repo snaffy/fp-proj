@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Message} from '../../model/message';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ApiUrl} from '../../model/api-url';
-import {PaginationRequestFactory} from '../common/pagination-request-factory';
+import {RequestFactory} from '../common/request-factory';
 import {Messages} from '../../model/messages';
 
 @Injectable({
@@ -21,7 +21,7 @@ export class ContactService {
   }
 
   fetchMessages(page: number, limit?: number): void {
-    const request = PaginationRequestFactory.createRequest(page, limit);
+    const request = RequestFactory.createPaginationRequest(page, limit);
     this.sentPaginationRequest(request);
   }
 
