@@ -10,6 +10,7 @@ import {NavigationComponent} from './navigation/navigation.component';
 import {CoreModule} from './core/core.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from './shared/shared.module';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({

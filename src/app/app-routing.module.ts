@@ -8,6 +8,7 @@ export const route: Routes = [
   {path: '', component: HomeComponent, pathMatch: 'full'},
   {path: 'contact', component: ContactComponent},
   {path: 'products', loadChildren: () => import('./products/products.module').then(m => m.ProductsModule)},
+  {path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)},
   {path: '**', component: PageNotFoundComponent}
 ];
 
@@ -15,5 +16,4 @@ export const route: Routes = [
   imports: [RouterModule.forRoot(route)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

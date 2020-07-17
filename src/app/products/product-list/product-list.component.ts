@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Product} from '../../model/product';
 import {ProductService} from '../../core/services/product.service';
 import {ProductFilterComponent} from '../product-filter/product-filter.component';
@@ -6,25 +6,34 @@ import {PaginationConfig} from './model/pagination-config';
 import {PageChangedEvent} from 'ngx-bootstrap/pagination';
 import {Subject, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter} from 'rxjs/operators';
+import {filter, mergeMap} from 'rxjs/operators';
+import {AuthService} from '../../core/auth/services/auth.service';
+import {OrderModalComponent} from '../order-modal/order-modal.component';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html'
 })
 export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(OrderModalComponent)
+  orderModalComponent: OrderModalComponent;
 
   @ViewChild(ProductFilterComponent)
   productFilterComponent: ProductFilterComponent;
   products: Array<Product>;
   paginationConfig: PaginationConfig;
   productDataLoaded;
+  currentSelectedPage;
   private productsSubscription: Subscription;
   private subject: Subject<string>;
-  currentSelectedPage;
-  searchBy: string;
-  constructor(private productService: ProductService, private router: Router, private activatedRoute: ActivatedRoute) {
+
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    public authService: AuthService) {
     this.paginationConfig = new PaginationConfig();
+    this.currentSelectedPage = this.paginationConfig.page;
     this.subject = new Subject<string>();
   }
 
@@ -32,7 +41,6 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productDataLoaded = false;
     this.productService.fetchFirstTenProducts();
     this.initializeProductsViewList();
-    this.currentSelectedPage = this.paginationConfig.page;
     this.subscribeToParamFilterChanges();
   }
 
@@ -48,12 +56,25 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   pageChanged($event: PageChangedEvent): void {
     this.currentSelectedPage = $event.page;
-    console.log(this.currentSelectedPage);
     this.router.navigate([],
       {
         relativeTo: this.activatedRoute,
         queryParams: {_page: $event.page, _itemsPerPage: $event.itemsPerPage}, queryParamsHandling: 'merge'
       });
+  }
+
+  openOrderProductModal(productId: string): void {
+    this.orderModalComponent.openOrderProductModal(productId);
+  }
+
+  increaseProductQuantityByOne(productId: string): void {
+    this.productService.getProductById(productId).pipe(mergeMap(product => {
+      product.quantity++;
+      return this.productService.edit(product);
+    })).subscribe(updatedProduct => {
+      this.updateProductListView(updatedProduct);
+    });
+
   }
 
   private initializeProductsViewList(): void {
@@ -83,6 +104,10 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     return true;
+  }
+
+  private updateProductListView(updatedProduct: Product): void {
+    this.products.find(item => item.id === updatedProduct.id).quantity = updatedProduct.quantity;
   }
 }
 

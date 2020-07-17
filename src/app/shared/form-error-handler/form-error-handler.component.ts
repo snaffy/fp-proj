@@ -35,6 +35,9 @@ export class FormErrorHandlerComponent implements OnInit, OnChanges {
     const controls = this.form.controls;
     this.removePreviouslyCreatedErrDivs();
     for (const field in controls) {
+      if (!this.fieldIsDefinedInErrorMapping(field + 'Id')){
+        continue;
+      }
       const controlField = controls[field];
       if (this.fieldHasError(controlField)) {
         Object.keys(controlField.errors).forEach(validatorType => {
@@ -44,6 +47,11 @@ export class FormErrorHandlerComponent implements OnInit, OnChanges {
         this.markFieldAsValid(field + 'Id');
       }
     }
+  }
+
+  private fieldIsDefinedInErrorMapping(field: string): boolean {
+    const containsElement = this.errMapping.filter(value => value.fieldId === field).length;
+    return containsElement > 0;
   }
 
   private fieldHasError(controlField: AbstractControl): boolean {

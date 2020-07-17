@@ -1,0 +1,11 @@
+<ng-template #templateRef>
+  <div class="modal-header">
+    <h4 class="modal-title">{{modalResult.title}}</h4>
+  </div>
+  <div class="modal-body">
+    <p>{{modalResult.body}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="closeModal('Close click')">Close</button>
+  </div>
+</ng-template>

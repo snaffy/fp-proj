@@ -1,0 +1,52 @@
+<div class="container">
+
+  <ng-container
+    *ngIf="orderSummary === undefined || orderSummary.isEmpty === true; then nothingInCart; else productsInCart"></ng-container>
+
+  <ng-template #nothingInCart>
+    <div *ngIf="isPurchasesFinished" class="alert alert-success" role="alert">
+      Thank you for your purchases.
+    </div>
+    <div *ngIf="isPurchasesFinished === false" class="alert alert-info" role="alert">
+      You don't have anything in your cart.
+    </div>
+  </ng-template>
+
+  <ng-template #productsInCart>
+    <table class="table">
+      <tr>
+        <th scope="col">Product name</th>
+        <th scope="col">Price per item</th>
+        <th scope="col">Quantity</th>
+      </tr>
+      <tbody>
+      <ng-container *ngFor="let orderDetails of orderSummary.orderDetails">
+        <tr>
+          <td>{{orderDetails.name}}</td>
+          <td>{{orderDetails.pricePerUnit | currency: 'EUR'}}</td>
+          <td>{{orderDetails.quantity}}</td>
+        </tr>
+      </ng-container>
+      </tbody>
+      <tfoot>
+      <tr>
+        <td></td>
+        <td></td>
+        <th>
+          <div class="border border-light p-sm-2">
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+              <div class="btn-group mr-md-1" role="group" aria-label="First group">
+                Total:&nbsp;&nbsp;<span>{{orderSummary.summary | currency: 'EUR'}}</span>
+              </div>
+              <div class="btn-group" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-primary" (click)="purchase()">Checkout</button>
+              </div>
+            </div>
+
+          </div>
+        </th>
+      </tr>
+      </tfoot>
+    </table>
+  </ng-template>
+</div>
